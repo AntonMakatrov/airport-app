@@ -13,7 +13,7 @@ public class DataSourceCreator {
 
     private DataSourceCreator() throws IOException, SQLException, PropertyVetoException {
         cpds = new ComboPooledDataSource();
-        cpds.setDriverClass("Driver");
+        cpds.setDriverClass("org.postgresql.Driver");
         cpds.setJdbcUrl("jdbc:postgresql://localhost:5432/demo");
         cpds.setUser("postgres");
         cpds.setPassword("1234");

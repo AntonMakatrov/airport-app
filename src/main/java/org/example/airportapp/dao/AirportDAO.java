@@ -15,7 +15,7 @@ import java.util.List;
 
 public class AirportDAO implements IAirportDao {
     private DataSource ds = DataSourceCreator.getInstance();
-    Airport airport = new Airport();
+
     List<Airport> airports = new ArrayList<>();
 
     public AirportDAO() throws PropertyVetoException, SQLException, IOException {
@@ -36,6 +36,7 @@ public class AirportDAO implements IAirportDao {
              ResultSet resultSet = ps.executeQuery()) {
 
             while (resultSet.next()) {
+                Airport airport = new Airport();
                 airport.setAirportCode(resultSet.getString(1));
                 airport.setAirportName(resultSet.getString(2));
                 airport.setCity(resultSet.getString(3));

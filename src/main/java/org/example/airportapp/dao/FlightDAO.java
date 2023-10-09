@@ -14,8 +14,6 @@ import java.util.List;
 public class FlightDAO implements IFlightDao {
     private DataSource ds = DataSourceCreator.getInstance();
 
-    Flight flight = new Flight();
-
     List<Flight> flights = new ArrayList<>();
 
     public FlightDAO() throws PropertyVetoException, SQLException, IOException {
@@ -28,6 +26,7 @@ public class FlightDAO implements IFlightDao {
              ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
+                Flight flight = new Flight();
                 flight.setFlightId(resultSet.getInt("flight_id"));
                 flight.setFlightNo(resultSet.getString("flight_no"));
                 flight.setScheduledDeparture(resultSet.getTimestamp("scheduled_departure"));
@@ -91,6 +90,7 @@ public class FlightDAO implements IFlightDao {
 
                 try (ResultSet resultSet = statement.executeQuery()) {
                     while (resultSet.next()) {
+                        Flight flight = new Flight();
                         flight.setFlightId(resultSet.getInt("flight_id"));
                         flight.setFlightNo(resultSet.getString("flight_no"));
                         flight.setScheduledDeparture(resultSet.getTimestamp("scheduled_departure"));
