@@ -1,6 +1,7 @@
 package org.example.airportapp.core.entity;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 public class Flight {
     private int flightId;
@@ -110,6 +111,62 @@ public class Flight {
 
     public void setActualArrival(Timestamp actualArrival) {
         this.actualArrival = actualArrival;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Flight flight = (Flight) o;
+
+        if (flightId != flight.flightId) return false;
+        if (!Objects.equals(flightNo, flight.flightNo)) return false;
+        if (!Objects.equals(scheduledDeparture, flight.scheduledDeparture))
+            return false;
+        if (!Objects.equals(scheduledArrival, flight.scheduledArrival))
+            return false;
+        if (!Objects.equals(departureAirport, flight.departureAirport))
+            return false;
+        if (!Objects.equals(arrivalAirport, flight.arrivalAirport))
+            return false;
+        if (!Objects.equals(status, flight.status)) return false;
+        if (!Objects.equals(aircraftCode, flight.aircraftCode))
+            return false;
+        if (!Objects.equals(actualDeparture, flight.actualDeparture))
+            return false;
+        return Objects.equals(actualArrival, flight.actualArrival);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = flightId;
+        result = 31 * result + (flightNo != null ? flightNo.hashCode() : 0);
+        result = 31 * result + (scheduledDeparture != null ? scheduledDeparture.hashCode() : 0);
+        result = 31 * result + (scheduledArrival != null ? scheduledArrival.hashCode() : 0);
+        result = 31 * result + (departureAirport != null ? departureAirport.hashCode() : 0);
+        result = 31 * result + (arrivalAirport != null ? arrivalAirport.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (aircraftCode != null ? aircraftCode.hashCode() : 0);
+        result = 31 * result + (actualDeparture != null ? actualDeparture.hashCode() : 0);
+        result = 31 * result + (actualArrival != null ? actualArrival.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Flight{" +
+                "flightId=" + flightId +
+                ", flightNo='" + flightNo + '\'' +
+                ", scheduledDeparture=" + scheduledDeparture +
+                ", scheduledArrival=" + scheduledArrival +
+                ", departureAirport='" + departureAirport + '\'' +
+                ", arrivalAirport='" + arrivalAirport + '\'' +
+                ", status='" + status + '\'' +
+                ", aircraftCode='" + aircraftCode + '\'' +
+                ", actualDeparture=" + actualDeparture +
+                ", actualArrival=" + actualArrival +
+                '}';
     }
 }
 

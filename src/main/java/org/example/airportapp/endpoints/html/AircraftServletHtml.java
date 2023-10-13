@@ -12,6 +12,7 @@ import org.example.airportapp.service.factory.AircraftServiceFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet("/html/aircraft")
 public class AircraftServletHtml extends HttpServlet {
@@ -19,17 +20,13 @@ public class AircraftServletHtml extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        writer.write("<html><body>");
+
         try {
-            for(Aircraft airCraft : aircraftService.getAllAircrafts()){
-                writer.write(airCraft.getAircraftCode() + "</br>"
-                        + airCraft.getModel() + "</br>"
-                        + airCraft.getRange() + "</p>");
-            }
+            List<Aircraft> data = this.aircraftService.getAllAircrafts();
+            req.setAttribute("data", data);
+            req.getRequestDispatcher("/views/aircraft.jsp").forward(req,resp);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        writer.write("</body></html>");
     }
 }

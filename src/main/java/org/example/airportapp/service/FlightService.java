@@ -26,7 +26,12 @@ public class FlightService implements IFlightService {
                                            Timestamp toDate,
                                            String departureAirport,
                                            String arrivalAirport,
-                                           String status) throws SQLException{
-        return flightDao.getFilteredFlights(fromDate,toDate,departureAirport,arrivalAirport,status);
+                                           String status, int page, int size) throws SQLException{
+        return flightDao.getFilteredFlights(fromDate,toDate,departureAirport,arrivalAirport,status, page,size);
+    }
+
+    @Override
+    public List<Flight> getPage(int page, int size) {
+        return this.flightDao.getPage(page, size);
     }
 }

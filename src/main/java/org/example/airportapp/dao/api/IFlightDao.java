@@ -13,5 +13,8 @@ public interface IFlightDao {
                                     Timestamp toDate,
                                     String departureAirport,
                                     String arrivalAirport,
-                                    String status) throws SQLException;
+                                    String status,
+                                    int page,int size) throws SQLException;
+
+    List<Flight> getPage(int page, int size);
 }
