@@ -1,6 +1,7 @@
 package org.example.airportapp.endpoints.json;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+@WebServlet("/json/flight")
 public class FlightServletJson extends HttpServlet {
     private IFlightService flightService = FlightServiceFactory.getInstance();
 

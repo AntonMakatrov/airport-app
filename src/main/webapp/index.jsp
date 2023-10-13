@@ -42,5 +42,14 @@
 <form action="${pageContext.request.contextPath}/html/flight">
     <input type="submit" value="Просмотр полетов">
 </form>
+<form action="${pageContext.request.contextPath}/json/aircraft">
+    <input type="submit" value="Просмотр самолетов(JSON)">
+</form>
+<form action="${pageContext.request.contextPath}/json/airport">
+    <input type="submit" value="Просмотр аэропортов(JSON)">
+</form>
+<form action="${pageContext.request.contextPath}/json/flight">
+    <input type="submit" value="Просмотр полетов(JSON)">
+</form>
 </body>
 </html>
