@@ -1,21 +1,15 @@
 package org.example.airportapp.service.api;
 
-
 import org.example.airportapp.core.entity.Flight;
+import org.example.airportapp.core.entity.FlightFilter;
+import org.example.airportapp.core.entity.Pageable;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 public interface IFlightService {
-    List<Flight> getAllFlights() throws SQLException;
+    List<Flight> getAll();
 
-    List<Flight> getFilteredFlights(Timestamp fromDate,
-                                    Timestamp toDate,
-                                    String departureAirport,
-                                    String arrivalAirport,
-                                    String status,
-                                    int page, int size) throws SQLException;
+    List<Flight> getPage(Pageable pageable);
 
-    List<Flight> getPage(int page, int size);
+    List<Flight> getPage(FlightFilter filter, Pageable pageable);
 }

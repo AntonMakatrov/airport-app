@@ -1,27 +1,21 @@
 package org.example.airportapp.dao.factory;
 
-import org.example.airportapp.dao.AirportDAO;
-import org.example.airportapp.dao.api.IAirportDao;
 
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.sql.SQLException;
+import org.example.airportapp.dao.AirportDao;
+import org.example.airportapp.dao.api.IAirportDao;
+import org.example.airportapp.dao.data_source.EMFFactory;
 
 public class AirportDaoFactory {
-    private volatile static AirportDAO instance;
+    private static volatile IAirportDao instance;
 
-    private AirportDaoFactory(){
+    private AirportDaoFactory() {
     }
 
-    public static IAirportDao getInstance()  {
-        if (instance == null) {
-            synchronized (AirportDaoFactory.class) {
-                if (instance == null) {
-                    try {
-                        instance = new AirportDAO();
-                    } catch (PropertyVetoException | SQLException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+    public static IAirportDao getInstance() {
+        if(instance == null){
+            synchronized (AirportDaoFactory.class){
+                if(instance == null){
+                    instance = new AirportDao(EMFFactory.getInstance());
                 }
             }
         }

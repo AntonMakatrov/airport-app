@@ -16,17 +16,16 @@ import java.util.List;
 
 @WebServlet("/html/aircraft")
 public class AircraftServletHtml extends HttpServlet {
-    private IAircraftService aircraftService = AircraftServiceFactory.getInstance();
+    private final IAircraftService service;
+
+    public AircraftServletHtml() {
+        this.service = AircraftServiceFactory.getInstance();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        try {
-            List<Aircraft> data = this.aircraftService.getAllAircrafts();
-            req.setAttribute("data", data);
-            req.getRequestDispatcher("/views/aircraft.jsp").forward(req,resp);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        List<Aircraft> data = this.service.getAll();
+        req.setAttribute("data", data);
+        req.getRequestDispatcher("/view/aircraft.jsp").forward(req, resp);
     }
 }

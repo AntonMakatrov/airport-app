@@ -5,15 +5,15 @@ import org.example.airportapp.service.FlightService;
 import org.example.airportapp.service.api.IFlightService;
 
 public class FlightServiceFactory {
-    private volatile static FlightService instance;
+    private static volatile IFlightService instance;
 
     private FlightServiceFactory() {
     }
 
     public static IFlightService getInstance() {
-        if (instance == null) {
-            synchronized (FlightServiceFactory.class) {
-                if (instance == null) {
+        if(instance == null){
+            synchronized (FlightServiceFactory.class){
+                if(instance == null){
                     instance = new FlightService(FlightDaoFactory.getInstance());
                 }
             }

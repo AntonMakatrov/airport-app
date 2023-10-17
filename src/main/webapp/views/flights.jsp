@@ -60,10 +60,10 @@
     <label for="status">Статус рейса:</label>
     <input type="text" id="status" name="status">
 
-    <button type="submit">Применить</button>
+    <button type="submit" name="apply">Применить</button>
 </form>
 
-<table>
+<table id="flightTable">
     <thead>
     <tr>
         <th>Идентификатор рейса</th>
@@ -95,8 +95,11 @@
     </c:forEach>
     </tbody>
 </table>
+
 </body>
 <!-- Кнопка для возврата на главную страницу -->
 <a href="${pageContext.request.contextPath}">Вернуться на главную страницу</a>
+
+
 
 </html>
