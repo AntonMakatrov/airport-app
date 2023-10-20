@@ -1,4 +1,4 @@
-package org.example.airportapp.core.entity;
+package org.example.airportapp.core.dto;
 
 public class Pageable {
     private int page;

@@ -1,8 +1,8 @@
 package org.example.airportapp.service.api;
 
-import org.example.airportapp.core.entity.Flight;
-import org.example.airportapp.core.entity.FlightFilter;
-import org.example.airportapp.core.entity.Pageable;
+import org.example.airportapp.core.dto.Flight;
+import org.example.airportapp.core.dto.FlightFilter;
+import org.example.airportapp.core.dto.Pageable;
 
 import java.util.List;
 

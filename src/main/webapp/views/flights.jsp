@@ -1,9 +1,9 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page language="java"
+         contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,67 +39,57 @@
 </head>
 <body>
 <h1 style="text-align: center;">Список полетов</h1>
-<form action="${pageContext.request.contextPath}/html/flight" method="get">
-    <label for="page">Страница:</label>
-    <input type="text" id="page" name="page" value="${param.page}">
-    <label for="size">Записей на странице:</label>
-    <select id="size" name="size">
-        <option value="10" ${param.size == '10' ? 'selected' : ''}>10</option>
-        <option value="20" ${param.size == '20' ? 'selected' : ''}>20</option>
-        <option value="50" ${param.size == '50' ? 'selected' : ''}>50</option>
-    </select>
-
-    <label for="fromDate">Время вылета по расписанию:</label>
-    <input type="text" id="fromDate" name="fromDate">
-    <label for="toDate">Время прилёта по расписанию:</label>
-    <input type="text" id="toDate" name="toDate">
-    <label for="departureAirport">Аэропорт отправления:</label>
-    <input type="text" id="departureAirport" name="departureAirport">
-    <label for="arrivalAirport">Аэропорт прибытия:</label>
-    <input type="text" id="arrivalAirport" name="arrivalAirport">
-    <label for="status">Статус рейса:</label>
-    <input type="text" id="status" name="status">
-
-    <button type="submit" name="apply">Применить</button>
-</form>
 
 <table id="flightTable">
     <thead>
-    <tr>
-        <th>Идентификатор рейса</th>
-        <th>Номер рейса</th>
-        <th>Время вылета по расписанию</th>
-        <th>Время прилёта по расписанию</th>
-        <th>Аэропорт отправления</th>
-        <th>Аэропорт прибытия</th>
-        <th>Статус рейса</th>
-        <th>Код самолета, IATA</th>
-        <th>Фактическое время вылета</th>
-        <th>Фактическое время прилёта</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${data}" var="item">
         <tr>
-            <td>${item.flightId}</td>
-            <td>${item.flightNo}</td>
-            <td>${item.scheduledDeparture}</td>
-            <td>${item.scheduledArrival}</td>
-            <td>${item.departureAirport}</td>
-            <td>${item.arrivalAirport}</td>
-            <td>${item.status}</td>
-            <td>${item.aircraftCode}</td>
-            <td>${item.actualDeparture}</td>
-            <td>${item.actualArrival}</td>
+                <td>aircraftCode</td>
+                <td>flightId</td>
+                <td>flightNo</td>
+                <td>scheduledDeparture</td>
+                <td>scheduledDepartureLocal</td>
+                <td>scheduledArrival</td>
+                <td>scheduledArrivalLocal</td>
+                <td>scheduledDuration</td>
+                <td>departureAirport</td>
+                <td>departureAirportName</td>
+                <td>departureCity</td>
+                <td>arrivalAirport</td>
+                <td>arrivalAirportName</td>
+                <td>arrivalCity</td>
+                <td>status</td>
+                <td>aircraftCode</td>
+                <td>actualDeparture</td>
+                <td>actualDepartureLocal</td>
+                <td>actualArrival</td>
         </tr>
-    </c:forEach>
-    </tbody>
-</table>
-
+    </thead>
+        <tbody>
+            <c:forEach items="${data}" var="item">
+                <tr>
+                    <td>${item.aircraftCode}</td>
+                    <td>${item.flightId}</td>
+                    <td>${item.flightNo}</td>
+                    <td>${item.scheduledDeparture}</td>
+                    <td>${item.scheduledDepartureLocal}</td>
+                    <td>${item.scheduledArrival}</td>
+                    <td>${item.scheduledArrivalLocal}</td>
+                    <td>${item.scheduledDuration}</td>
+                    <td>${item.departureAirport}</td>
+                    <td>${item.departureAirportName}</td>
+                    <td>${item.departureCity}</td>
+                    <td>${item.arrivalAirport}</td>
+                    <td>${item.arrivalAirportName}</td>
+                    <td>${item.arrivalCity}</td>
+                    <td>${item.status}</td>
+                    <td>${item.aircraftCode}</td>
+                    <td>${item.actualDeparture}</td>
+                    <td>${item.actualDepartureLocal}</td>
+                    <td>${item.actualArrival}</td>
+                </tr>
+            </c:forEach>
+        </tbody>
+    </table>
 </body>
-<!-- Кнопка для возврата на главную страницу -->
 <a href="${pageContext.request.contextPath}">Вернуться на главную страницу</a>
-
-
-
 </html>
