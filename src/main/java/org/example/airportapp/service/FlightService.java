@@ -1,37 +1,33 @@
 package org.example.airportapp.service;
 
-import org.example.airportapp.core.entity.Airport;
 import org.example.airportapp.core.entity.Flight;
-import org.example.airportapp.dao.api.IAirportDao;
+import org.example.airportapp.core.entity.FlightFilter;
+import org.example.airportapp.core.entity.Pageable;
 import org.example.airportapp.dao.api.IFlightDao;
 import org.example.airportapp.service.api.IFlightService;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class FlightService implements IFlightService {
-    IFlightDao flightDao;
-    public FlightService(IFlightDao instance) {
-        this.flightDao = instance;
+    private final IFlightDao dao;
+
+    public FlightService(IFlightDao dao) {
+        this.dao = dao;
     }
 
     @Override
-    public List<Flight> getAllFlights() throws SQLException {
-        return flightDao.getAllFlights();
+    public List<Flight> getAll() {
+        return this.dao.getAll();
     }
 
     @Override
-    public List<Flight> getFilteredFlights(Timestamp fromDate,
-                                           Timestamp toDate,
-                                           String departureAirport,
-                                           String arrivalAirport,
-                                           String status, int page, int size) throws SQLException{
-        return flightDao.getFilteredFlights(fromDate,toDate,departureAirport,arrivalAirport,status, page,size);
+    public List<Flight> getPage(Pageable pageable) {
+        return this.dao.getPage(pageable);
     }
 
     @Override
-    public List<Flight> getPage(int page, int size) {
-        return this.flightDao.getPage(page, size);
+    public List<Flight> getPage(FlightFilter filter, Pageable pageable) {
+
+        return this.dao.getPage(filter, pageable);
     }
 }

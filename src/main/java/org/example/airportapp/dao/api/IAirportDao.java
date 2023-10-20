@@ -1,10 +1,8 @@
 package org.example.airportapp.dao.api;
 
-import org.example.airportapp.core.entity.Airport;
-
-import java.sql.SQLException;
+import org.example.airportapp.dao.entity.AirportEntity;
 import java.util.List;
 
 public interface IAirportDao {
-    List<Airport> getAllAirports() throws SQLException;
+    List<AirportEntity> getAll();
 }

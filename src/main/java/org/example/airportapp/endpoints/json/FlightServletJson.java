@@ -6,40 +6,80 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.airportapp.core.entity.Flight;
+import org.example.airportapp.core.entity.FlightFilter;
+import org.example.airportapp.core.entity.Pageable;
 import org.example.airportapp.service.api.IFlightService;
 import org.example.airportapp.service.factory.FlightServiceFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @WebServlet("/json/flight")
 public class FlightServletJson extends HttpServlet {
-    private IFlightService flightService = FlightServiceFactory.getInstance();
+    private static final String PAGE_PARAM = "page";
+    private static final String SIZE_PARAM = "size";
+
+    private static final String SCHEDULED_DEPARTURE_PARAM = "scheduled_departure";
+    private static final String SCHEDULED_ARRIVAL_PARAM = "scheduled_arrival";
+    private static final String DEPARTURE_AIRPORT_PARAM = "departure_airport";
+    private static final String ARRIVAL_AIRPORT_PARAM = "arrival_airport";
+    private static final String STATUS_PARAM = "status";
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+    private final IFlightService service;
+
+    public FlightServletJson() {
+        this.service = FlightServiceFactory.getInstance();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-
-        writer.println("[");
-        try {
-            for (Flight flight: flightService.getAllFlights()) {
-                writer.println("{");
-                writer.println("\"airportCode\": \"" + flight.getFlightId() + "\",");
-                writer.println("\"airportName\": \"" + flight.getFlightNo() + "\",");
-                writer.println("\"city\": \"" + flight.getScheduledDeparture() + "\",");
-                writer.println("\"coordinates\": \"" + flight.getScheduledArrival() + "\",");
-                writer.println("\"city\": \"" + flight.getDepartureAirport() + "\",");
-                writer.println("\"city\": \"" + flight.getArrivalAirport() + "\",");
-                writer.println("\"city\": \"" + flight.getStatus() + "\",");
-                writer.println("\"city\": \"" + flight.getAircraftCode() + "\",");
-                writer.println("\"city\": \"" + flight.getActualDeparture() + "\",");
-                writer.println("\"timezone\": " + flight.getActualArrival());
-                writer.println("}");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        String scheduledDepartureRaw = req.getParameter(SCHEDULED_DEPARTURE_PARAM);
+        LocalDate scheduledDeparture = null;
+        if (scheduledDepartureRaw != null && !scheduledDepartureRaw.isBlank()) {
+            scheduledDeparture = LocalDate.parse(scheduledDepartureRaw, formatter);
         }
-        writer.println("]");
+
+        String scheduledArrivalRaw = req.getParameter(SCHEDULED_ARRIVAL_PARAM);
+        LocalDate scheduledArrival = null;
+        if (scheduledArrivalRaw != null && !scheduledArrivalRaw.isBlank()) {
+            scheduledArrival = LocalDate.parse(scheduledArrivalRaw, formatter);
+        }
+
+        String departureAirport = req.getParameter(DEPARTURE_AIRPORT_PARAM);
+        String arrivalAirport = req.getParameter(ARRIVAL_AIRPORT_PARAM);
+        String status = req.getParameter(STATUS_PARAM);
+
+
+        String pageRaw = req.getParameter(PAGE_PARAM);
+        int page;
+        if (pageRaw == null || pageRaw.isBlank()) {
+            page = 1;
+        } else {
+            page = Integer.parseInt(pageRaw);
+        }
+        String sizeRaw = req.getParameter(SIZE_PARAM);
+        int size;
+        if (sizeRaw == null || sizeRaw.isBlank()) {
+            size = 50;
+        } else {
+            size = Integer.parseInt(sizeRaw);
+        }
+
+        FlightFilter filter = new FlightFilter(scheduledDeparture, scheduledArrival, departureAirport, arrivalAirport, status);
+        Pageable pageable = new Pageable(page, size);
+
+        List<Flight> data = this.service.getPage(filter, pageable);
+
+
+        resp.getWriter().write(mapper.writeValueAsString(data));
     }
 }

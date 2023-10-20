@@ -1,18 +1,31 @@
-package org.example.airportapp.core.entity;
+package org.example.airportapp.dao.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
-public class Airport {
+
+@Entity
+@Table(schema = "bookings", name = "airports")
+public class AirportEntity {
+
+    @Id
+    @Column(name = "airport_code")
     private String airportCode;
+
+    @Column(name = "airport_name")
     private String airportName;
     private String city;
     private String coordinates;
     private String timezone;
 
-    public Airport() {
+    public AirportEntity() {
     }
 
-    public Airport(String airportCode, String airportName, String city, String coordinates, String timezone) {
+    public AirportEntity(String airportCode, String airportName, String city, String coordinates, String timezone) {
         this.airportCode = airportCode;
         this.airportName = airportName;
         this.city = city;
@@ -65,13 +78,13 @@ public class Airport {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Airport airport = (Airport) o;
+        AirportEntity airportEntity = (AirportEntity) o;
 
-        if (!Objects.equals(airportCode, airport.airportCode)) return false;
-        if (!Objects.equals(airportName, airport.airportName)) return false;
-        if (!Objects.equals(city, airport.city)) return false;
-        if (!Objects.equals(coordinates, airport.coordinates)) return false;
-        return Objects.equals(timezone, airport.timezone);
+        if (!Objects.equals(airportCode, airportEntity.airportCode)) return false;
+        if (!Objects.equals(airportName, airportEntity.airportName)) return false;
+        if (!Objects.equals(city, airportEntity.city)) return false;
+        if (!Objects.equals(coordinates, airportEntity.coordinates)) return false;
+        return Objects.equals(timezone, airportEntity.timezone);
     }
 
     @Override

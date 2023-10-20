@@ -1,16 +1,26 @@
-package org.example.airportapp.core.entity;
+package org.example.airportapp.dao.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
-public class Aircraft {
+@Entity
+@Table(schema = "bookings", name = "aircrafts")
+public class AircraftEntity {
+
+    @Id
+    @Column(name = "aircraft_code")
     private String aircraftCode;
     private String model;
     private Integer range;
 
-    public Aircraft() {
+    public AircraftEntity() {
     }
 
-    public Aircraft(String aircraftCode, String model, Integer range) {
+    public AircraftEntity(String aircraftCode, String model, Integer range) {
         this.aircraftCode = aircraftCode;
         this.model = model;
         this.range = range;
@@ -45,12 +55,12 @@ public class Aircraft {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Aircraft aircraft = (Aircraft) o;
+        AircraftEntity aircraftEntity = (AircraftEntity) o;
 
-        if (!Objects.equals(aircraftCode, aircraft.aircraftCode))
+        if (!Objects.equals(aircraftCode, aircraftEntity.aircraftCode))
             return false;
-        if (!Objects.equals(model, aircraft.model)) return false;
-        return Objects.equals(range, aircraft.range);
+        if (!Objects.equals(model, aircraftEntity.model)) return false;
+        return Objects.equals(range, aircraftEntity.range);
     }
 
     @Override
