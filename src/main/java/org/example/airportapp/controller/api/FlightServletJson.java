@@ -1,26 +1,25 @@
-package org.example.airportapp.endpoints.json;
+package org.example.airportapp.controller.api;
 
+import org.example.airportapp.core.dto.Flight;
+import org.example.airportapp.core.dto.FlightFilter;
+import org.example.airportapp.core.dto.Pageable;
+import org.example.airportapp.service.api.IFlightService;
+import org.example.airportapp.service.factory.FlightServiceFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.airportapp.core.entity.Flight;
-import org.example.airportapp.core.entity.FlightFilter;
-import org.example.airportapp.core.entity.Pageable;
-import org.example.airportapp.service.api.IFlightService;
-import org.example.airportapp.service.factory.FlightServiceFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@WebServlet("/json/flight")
+@WebServlet(urlPatterns = "/api/flights")
 public class FlightServletJson extends HttpServlet {
+
     private static final String PAGE_PARAM = "page";
     private static final String SIZE_PARAM = "size";
 
@@ -44,13 +43,13 @@ public class FlightServletJson extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String scheduledDepartureRaw = req.getParameter(SCHEDULED_DEPARTURE_PARAM);
         LocalDate scheduledDeparture = null;
-        if (scheduledDepartureRaw != null && !scheduledDepartureRaw.isBlank()) {
+        if(scheduledDepartureRaw != null && !scheduledDepartureRaw.isBlank()){
             scheduledDeparture = LocalDate.parse(scheduledDepartureRaw, formatter);
         }
 
         String scheduledArrivalRaw = req.getParameter(SCHEDULED_ARRIVAL_PARAM);
         LocalDate scheduledArrival = null;
-        if (scheduledArrivalRaw != null && !scheduledArrivalRaw.isBlank()) {
+        if(scheduledArrivalRaw != null && !scheduledArrivalRaw.isBlank()){
             scheduledArrival = LocalDate.parse(scheduledArrivalRaw, formatter);
         }
 
@@ -61,14 +60,14 @@ public class FlightServletJson extends HttpServlet {
 
         String pageRaw = req.getParameter(PAGE_PARAM);
         int page;
-        if (pageRaw == null || pageRaw.isBlank()) {
+        if(pageRaw == null || pageRaw.isBlank()){
             page = 1;
         } else {
             page = Integer.parseInt(pageRaw);
         }
         String sizeRaw = req.getParameter(SIZE_PARAM);
         int size;
-        if (sizeRaw == null || sizeRaw.isBlank()) {
+        if(sizeRaw == null || sizeRaw.isBlank()){
             size = 50;
         } else {
             size = Integer.parseInt(sizeRaw);
@@ -78,8 +77,9 @@ public class FlightServletJson extends HttpServlet {
         Pageable pageable = new Pageable(page, size);
 
         List<Flight> data = this.service.getPage(filter, pageable);
-
+        resp.setContentType("application/json; charset=utf-8");
 
         resp.getWriter().write(mapper.writeValueAsString(data));
+
     }
 }

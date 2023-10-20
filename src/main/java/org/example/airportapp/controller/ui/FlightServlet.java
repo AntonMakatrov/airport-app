@@ -1,22 +1,23 @@
-package org.example.airportapp.endpoints.html;
+package org.example.airportapp.controller.ui;
 
+import org.example.airportapp.core.dto.Flight;
+import org.example.airportapp.core.dto.FlightFilter;
+import org.example.airportapp.core.dto.Pageable;
+import org.example.airportapp.service.api.IFlightService;
+import org.example.airportapp.service.factory.FlightServiceFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.airportapp.core.entity.Flight;
-import org.example.airportapp.core.entity.FlightFilter;
-import org.example.airportapp.core.entity.Pageable;
-import org.example.airportapp.service.api.IFlightService;
-import org.example.airportapp.service.factory.FlightServiceFactory;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@WebServlet("/html/flight")
-public class FlightServletHtml extends HttpServlet {
+@WebServlet(urlPatterns = "/flights")
+public class FlightServlet extends HttpServlet {
 
     private static final String PAGE_PARAM = "page";
     private static final String SIZE_PARAM = "size";
@@ -31,7 +32,7 @@ public class FlightServletHtml extends HttpServlet {
 
     private final IFlightService service;
 
-    public FlightServletHtml() {
+    public FlightServlet() {
         this.service = FlightServiceFactory.getInstance();
     }
 
@@ -74,6 +75,6 @@ public class FlightServletHtml extends HttpServlet {
 
         List<Flight> data = this.service.getPage(filter, pageable);
         req.setAttribute("data", data);
-        req.getRequestDispatcher("/view/flights.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/flights.jsp").forward(req, resp);
     }
 }

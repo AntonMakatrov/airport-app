@@ -33,22 +33,16 @@
 </head>
 <body>
 <h1>Выберите действие:</h1>
-<form action="${pageContext.request.contextPath}/html/aircraft">
+<form action="${pageContext.request.contextPath}/aircrafts">
     <input type="submit" value="Просмотр самолетов">
 </form>
-<form action="${pageContext.request.contextPath}/html/airport">
+<form action="${pageContext.request.contextPath}/airports">
     <input type="submit" value="Просмотр аэропортов">
 </form>
-<form action="${pageContext.request.contextPath}/html/flight">
+<form action="${pageContext.request.contextPath}/flights">
     <input type="submit" value="Просмотр полетов">
 </form>
-<form action="${pageContext.request.contextPath}/json/aircraft">
-    <input type="submit" value="Просмотр самолетов(JSON)">
-</form>
-<form action="${pageContext.request.contextPath}/json/airport">
-    <input type="submit" value="Просмотр аэропортов(JSON)">
-</form>
-<form action="${pageContext.request.contextPath}/json/flight">
+<form action="${pageContext.request.contextPath}/api/flights">
     <input type="submit" value="Просмотр полетов(JSON)">
 </form>
 </body>

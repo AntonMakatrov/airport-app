@@ -1,10 +1,8 @@
 package org.example.airportapp.dao;
 
-
-
-import org.example.airportapp.core.entity.Flight;
-import org.example.airportapp.core.entity.FlightFilter;
-import org.example.airportapp.core.entity.Pageable;
+import org.example.airportapp.core.dto.Flight;
+import org.example.airportapp.core.dto.FlightFilter;
+import org.example.airportapp.core.dto.Pageable;
 import org.example.airportapp.dao.api.IFlightDao;
 
 import javax.sql.DataSource;

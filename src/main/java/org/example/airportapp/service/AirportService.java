@@ -1,7 +1,6 @@
 package org.example.airportapp.service;
 
-
-import org.example.airportapp.core.entity.Airport;
+import org.example.airportapp.core.dto.Airport;
 import org.example.airportapp.dao.api.IAirportDao;
 import org.example.airportapp.service.api.IAirportService;
 

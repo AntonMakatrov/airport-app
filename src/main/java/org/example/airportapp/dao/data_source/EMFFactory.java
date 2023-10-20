@@ -4,14 +4,12 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 public class EMFFactory {
-    private final static EntityManagerFactory instance;
-
-    static {
-        instance =
-                Persistence.createEntityManagerFactory("test");
-    }
+    private static EntityManagerFactory instance;
 
     public static EntityManagerFactory getInstance() {
+        if (instance == null) {
+            instance = Persistence.createEntityManagerFactory("test");
+        }
         return instance;
     }
 }

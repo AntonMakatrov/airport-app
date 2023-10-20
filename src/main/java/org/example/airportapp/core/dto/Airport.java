@@ -1,4 +1,4 @@
-package org.example.airportapp.core.entity;
+package org.example.airportapp.core.dto;
 
 import java.util.Objects;
 

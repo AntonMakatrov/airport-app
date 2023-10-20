@@ -46,13 +46,13 @@
     </tr>
     </thead>
     <tbody>
-        <c:forEach items="${data}" var="item">
-            <tr>
-                <td>${item.aircraftCode}</td>
-                <td>${item.model}</td>
-                <td>${item.range}</td>
-                </tr>
-        </c:forEach>
+    <c:forEach items="${data}" var="item">
+        <tr>
+            <td>${item.aircraftCode}</td>
+            <td>${item.model}</td>
+            <td>${item.range}</td>
+        </tr>
+    </c:forEach>
     </tbody>
 </table>
 <!-- Кнопка для возврата на главную страницу -->
