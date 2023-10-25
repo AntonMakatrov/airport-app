@@ -11,9 +11,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class AircraftDao implements IAircraftDao {
-
     private final EntityManagerFactory emf;
-
 
     public AircraftDao(EntityManagerFactory emf) {
         this.emf = emf;

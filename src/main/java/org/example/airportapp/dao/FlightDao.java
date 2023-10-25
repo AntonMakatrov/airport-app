@@ -1,181 +1,98 @@
 package org.example.airportapp.dao;
 
-import org.example.airportapp.core.dto.Flight;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.example.airportapp.core.dto.FlightFilter;
 import org.example.airportapp.core.dto.Pageable;
 import org.example.airportapp.dao.api.IFlightDao;
+import org.example.airportapp.dao.entity.FlightEntity;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FlightDao implements IFlightDao {
+    private final EntityManagerFactory emf;
 
-    private final static String GET_ALL_FLIGHT = "SELECT flight_id, flight_no, scheduled_departure, scheduled_departure_local, scheduled_arrival, scheduled_arrival_local, scheduled_duration, departure_airport, departure_airport_name, departure_city, arrival_airport, arrival_airport_name, arrival_city, status, aircraft_code, actual_departure, actual_departure_local, actual_arrival, actual_arrival_local, actual_duration FROM bookings.flights_v";
-    private final static String GET_COUNT_FLIGHT = "SELECT count(*) FROM bookings.flights_v;";
-
-    private final DataSource dataSource;
-
-    public FlightDao(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public FlightDao(EntityManagerFactory emf) {
+        this.emf = emf;
     }
 
     @Override
-    public List<Flight> getAll() {
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stm = conn.prepareStatement(GET_ALL_FLIGHT);
-             ResultSet rs = stm.executeQuery();)
-        {
-            List<Flight> data = new ArrayList<>();
-            while (rs.next()){
-                data.add(map(rs));
-            }
-
-            return data;
-        } catch (SQLException e){
-            throw new IllegalStateException("Ошибка получения информации об аэропортах", e);
-        }
+    public List<FlightEntity> getAll() {
+        EntityManager em = emf.createEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<FlightEntity> query = cb.createQuery(FlightEntity.class);
+        Root<FlightEntity> root = query.from(FlightEntity.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
-    public List<Flight> getPage(Pageable pageable) {
+    public List<FlightEntity> getPage(Pageable pageable) {
         return getPage(null, pageable);
     }
 
     @Override
-    public List<Flight> getPage(FlightFilter filter, Pageable pageable) {
-        String sql = GET_ALL_FLIGHT;
+    public List<FlightEntity> getPage(FlightFilter filter, Pageable pageable) {
+        EntityManager em = emf.createEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<FlightEntity> query = cb.createQuery(FlightEntity.class);
+        Root<FlightEntity> root = query.from(FlightEntity.class);
 
-        List<Object> params = new ArrayList<>();
-        if(filter != null){
-            StringBuilder sqlBuilder = new StringBuilder();
-
-            boolean needSeparator = false;
-            if(filter.getArrivalAirport() != null){
-                if(needSeparator){
-                    sqlBuilder.append(" AND ");
-                } else {
-                    needSeparator = true;
-                }
-                sqlBuilder.append("arrival_airport = ?");
-                params.add(filter.getArrivalAirport());
-            }
-            if(filter.getDepartureAirport() != null){
-                if(needSeparator){
-                    sqlBuilder.append(" AND ");
-                } else {
-                    needSeparator = true;
-                }
-                sqlBuilder.append("departure_airport = ?");
-                params.add(filter.getDepartureAirport());
-            }
-            if(filter.getStatus() != null){
-                if(needSeparator){
-                    sqlBuilder.append(" AND ");
-                } else {
-                    needSeparator = true;
-                }
-                sqlBuilder.append("status = ?");
-                params.add(filter.getStatus());
-            }
-            if(filter.getScheduledDeparture() != null){
-                if(needSeparator){
-                    sqlBuilder.append(" AND ");
-                } else {
-                    needSeparator = true;
-                }
-                sqlBuilder.append("scheduled_departure >= ? AND scheduled_departure < ?");
-                params.add(filter.getScheduledDeparture());
-                params.add(filter.getScheduledDeparture().plusDays(1));
-            }
-            if(filter.getScheduledArrival() != null){
-                if(needSeparator){
-                    sqlBuilder.append(" AND ");
-                } else {
-                    needSeparator = true;
-                }
-                sqlBuilder.append("scheduled_arrival >= ? AND scheduled_arrival < ?");
-                params.add(filter.getScheduledArrival());
-                params.add(filter.getScheduledArrival().plusDays(1));
-            }
-
-            if(sqlBuilder.length() > 0){
-                sqlBuilder.insert(0, " WHERE ");
-                sql += sqlBuilder.toString();
-            }
+        if (filter != null) {
+            Predicate predicate = createPredicate(filter, cb, root);
+            query.where(predicate);
         }
 
-        if(pageable != null){
-            int size = pageable.getSize();
-            int page = pageable.getPage();
+        query.select(root);
 
-            sql += " LIMIT ? OFFSET ?";
-            params.add(size);
-            params.add(((page - 1) * size));
+        TypedQuery<FlightEntity> typedQuery = em.createQuery(query);
+
+        if (pageable != null) {
+            typedQuery.setFirstResult((pageable.getPage() - 1) * pageable.getSize());
+            typedQuery.setMaxResults(pageable.getSize());
         }
 
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stm = conn.prepareStatement(sql);
-             )
-        {
-            int index = 1;
-            for (Object param : params) {
-                stm.setObject(index++, param);
-            }
-
-            try(ResultSet rs = stm.executeQuery();){
-                List<Flight> data = new ArrayList<>();
-                while (rs.next()){
-                    data.add(map(rs));
-                }
-
-                return data;
-            }
-        } catch (SQLException e){
-            throw new IllegalStateException("Ошибка получения информации об аэропортах", e);
-        }
+        return typedQuery.getResultList();
     }
 
     public int count(){
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stm = conn.prepareStatement(GET_COUNT_FLIGHT);
-             ResultSet rs = stm.executeQuery();)
-        {
-            while (rs.next()){
-                return rs.getInt(1);
-            }
-
-            return 0;
-        } catch (SQLException e){
-            throw new IllegalStateException("Ошибка получения информации об аэропортах", e);
-        }
+        EntityManager em = emf.createEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> query = cb.createQuery(Long.class);
+        Root<FlightEntity> root = query.from(FlightEntity.class);
+        query.select(cb.count(root));
+        return Math.toIntExact(em.createQuery(query).getSingleResult());
     }
 
-    public Flight map(ResultSet rs) throws SQLException {
-        Flight item = new Flight();
-        item.setFlightId(rs.getString("flight_id"));
-        item.setFlightNo(rs.getString("flight_no"));
-        item.setScheduledDeparture(rs.getString("scheduled_departure"));
-        item.setScheduledDepartureLocal(rs.getString("scheduled_departure_local"));
-        item.setScheduledArrival(rs.getString("scheduled_arrival"));
-        item.setScheduledArrivalLocal(rs.getString("scheduled_arrival_local"));
-        item.setScheduledDuration(rs.getString("scheduled_duration"));
-        item.setDepartureAirport(rs.getString("departure_airport"));
-        item.setDepartureAirportName(rs.getString("departure_airport_name"));
-        item.setDepartureCity(rs.getString("departure_city"));
-        item.setArrivalAirport(rs.getString("arrival_airport"));
-        item.setArrivalAirportName(rs.getString("arrival_airport_name"));
-        item.setArrivalCity(rs.getString("arrival_city"));
-        item.setStatus(rs.getString("status"));
-        item.setAircraftCode(rs.getString("aircraft_code"));
-        item.setActualDeparture(rs.getString("actual_departure"));
-        item.setActualDepartureLocal(rs.getString("actual_departure_local"));
-        item.setActualArrival(rs.getString("actual_arrival"));
+    private Predicate createPredicate(FlightFilter filter, CriteriaBuilder cb, Root<FlightEntity> root) {
+        List<Predicate> predicates = new ArrayList<>();
 
-        return item;
+        if (filter != null) {
+            if (filter.getArrivalAirport() != null) {
+                predicates.add(cb.equal(root.get("arrivalAirport"), filter.getArrivalAirport()));
+            }
+            if (filter.getDepartureAirport() != null) {
+                predicates.add(cb.equal(root.get("departureAirport"), filter.getDepartureAirport()));
+            }
+            if (filter.getStatus() != null) {
+                predicates.add(cb.equal(root.get("status"), filter.getStatus()));
+            }
+            if (filter.getScheduledDeparture() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("scheduledDeparture"), filter.getScheduledDeparture()));
+                predicates.add(cb.lessThan(root.get("scheduledDeparture"), filter.getScheduledDeparture().plusDays(1)));
+            }
+            if (filter.getScheduledArrival() != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("scheduledArrival"), filter.getScheduledArrival()));
+                predicates.add(cb.lessThan(root.get("scheduledArrival"), filter.getScheduledArrival().plusDays(1)));
+            }
+        }
+
+        return cb.and(predicates.toArray(new Predicate[0]));
     }
 }

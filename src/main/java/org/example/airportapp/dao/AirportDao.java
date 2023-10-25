@@ -11,7 +11,6 @@ import org.example.airportapp.dao.entity.AirportEntity;
 import java.util.List;
 
 public class AirportDao implements IAirportDao {
-
     private final EntityManagerFactory emf;
 
     public AirportDao(EntityManagerFactory emf) {
