@@ -19,20 +19,15 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/api/flights")
 public class FlightServletJson extends HttpServlet {
-
     private static final String PAGE_PARAM = "page";
     private static final String SIZE_PARAM = "size";
-
     private static final String SCHEDULED_DEPARTURE_PARAM = "scheduled_departure";
     private static final String SCHEDULED_ARRIVAL_PARAM = "scheduled_arrival";
     private static final String DEPARTURE_AIRPORT_PARAM = "departure_airport";
     private static final String ARRIVAL_AIRPORT_PARAM = "arrival_airport";
     private static final String STATUS_PARAM = "status";
-
     private static final ObjectMapper mapper = new ObjectMapper();
-
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-
     private final IFlightService service;
 
     public FlightServletJson() {
@@ -56,8 +51,6 @@ public class FlightServletJson extends HttpServlet {
         String departureAirport = req.getParameter(DEPARTURE_AIRPORT_PARAM);
         String arrivalAirport = req.getParameter(ARRIVAL_AIRPORT_PARAM);
         String status = req.getParameter(STATUS_PARAM);
-
-
         String pageRaw = req.getParameter(PAGE_PARAM);
         int page;
         if(pageRaw == null || pageRaw.isBlank()){
@@ -65,6 +58,7 @@ public class FlightServletJson extends HttpServlet {
         } else {
             page = Integer.parseInt(pageRaw);
         }
+
         String sizeRaw = req.getParameter(SIZE_PARAM);
         int size;
         if(sizeRaw == null || sizeRaw.isBlank()){
@@ -80,6 +74,5 @@ public class FlightServletJson extends HttpServlet {
         resp.setContentType("application/json; charset=utf-8");
 
         resp.getWriter().write(mapper.writeValueAsString(data));
-
     }
 }
